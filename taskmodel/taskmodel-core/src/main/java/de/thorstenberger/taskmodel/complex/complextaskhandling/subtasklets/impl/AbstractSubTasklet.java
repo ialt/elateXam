@@ -267,5 +267,13 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 		build();
 	}
 	
+
+	/*
+		Input language property.
+	*/
+	public String getInputLanguage() {
+		return jaxbSubTaskDef.getInputLanguage();
+	}
+	
 	
 }

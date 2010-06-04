@@ -64,7 +64,8 @@ public class SubTaskView_TEXT extends SubTaskView {
 		corrected = false;
 
 		ret.append("<div align=\"center\">\n");
-		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
+		
+		ret.append("<textarea lang=\"" + textSubTasklet.getInputLanguage() + "\" name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						textSubTasklet.getTextFieldWidth() + "\" rows=\"" + textSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
 						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
 		ret.append( textSubTasklet.getAnswer() );
