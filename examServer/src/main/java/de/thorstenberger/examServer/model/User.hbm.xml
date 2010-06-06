@@ -55,6 +55,12 @@
                 not-null="false"
         >
 
+        <property
+            name="passwordSalt"
+            column="password_salt"
+            not-null="false"
+        >
+
         </property>
 
         <property

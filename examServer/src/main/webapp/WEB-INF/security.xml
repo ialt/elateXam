@@ -97,7 +97,9 @@
         <property name="userDetailsService" ref="userDao"/>
         <property name="key" value="appfuseRocks"/>
         <property name="parameter" value="rememberMe"/>
-    </bean> 
+    </bean>
+
+    
   
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
         <property name="providers">
@@ -144,6 +146,7 @@
          <property name="userDetailsService" ref="userDao"/>
          <property name="userCache" ref="userCache"/>
          <property name="passwordEncoder" ref="passwordEncoder"/>
+         <property name="saltSource" ref="saltSource" />
     </bean>
 
     <bean id="anonymousAuthenticationProvider" class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
@@ -156,7 +159,12 @@
 
     <!-- This bean definition must be available to ApplicationContext.getBean() so StartupListener
          can look for it and detect if password encryption is turned on or not -->
-    <bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.ShaPasswordEncoder"/>
+    <!-- <bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.ShaPasswordEncoder"/> -->
+    <bean id="passwordEncoder" class="de.ialt.ext.DjangoStyleShaPasswordEncoder"/>
+
+    <bean id="saltSource" class="org.acegisecurity.providers.dao.salt.ReflectionSaltSource">
+        <property name="userPropertyToUse" value="getPasswordSalt" />
+    </bean>
 
     <!-- This bean is optional; it isn't used by any other bean as it only listens and logs -->
     <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>

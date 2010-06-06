@@ -227,6 +227,9 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
         ret.setLastName(u.getLastName());
         ret.setPassword(u.getPassword());
         ret.setPasswordHint(u.getPasswordHint());
+
+        ret.setPasswordSalt(u.getPasswordSalt());
+
         ret.setPhoneNumber(u.getPhoneNumber());
         ret.setUsername(u.getUsername());
         ret.setVersion(u.getVersion());
@@ -261,6 +264,9 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
         userType.setLastName(user.getLastName());
         userType.setPassword(user.getPassword());
         userType.setPasswordHint(user.getPasswordHint());
+
+        userType.setPasswordSalt(user.getPasswordSalt());
+
         userType.setPhoneNumber(user.getPhoneNumber());
         userType.setUsername(user.getUsername());
         userType.setVersion(user.getVersion());

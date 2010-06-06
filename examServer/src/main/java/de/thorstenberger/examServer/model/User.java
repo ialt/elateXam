@@ -32,6 +32,9 @@ public class User extends BaseObject implements Serializable, UserDetails {
     protected String password;                    // required
     protected String confirmPassword;
     protected String passwordHint;
+
+    protected String passwordSalt; // optional
+
     protected String firstName;                   // required
     protected String lastName;                    // required
     protected String email;                       // required; unique
@@ -324,6 +327,17 @@ public class User extends BaseObject implements Serializable, UserDetails {
 
     public void setCredentialsExpired(boolean credentialsExpired) {
         this.credentialsExpired = credentialsExpired;
+    }
+
+    public void setPasswordSalt(String salt) {
+        this.passwordSalt = salt;
+    }
+
+    /*
+     * @hibernate.property not-null="false"
+     */
+    public String getPasswordSalt() {
+        return this.passwordSalt;
     }
     
     public boolean equals(Object o) {

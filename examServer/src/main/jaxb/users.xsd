@@ -21,6 +21,9 @@
 						<xs:attribute name="username" type="xs:string" use="required"/>
 						<xs:attribute name="password" type="xs:string" use="required"/>
 						<xs:attribute name="password_hint" type="xs:string" use="optional"/>
+
+                                                <xs:attribute name="password_salt" type="xs:string" use="optional"/>
+
 						<xs:attribute name="first_name" type="xs:string" use="optional"/>
 						<xs:attribute name="last_name" type="xs:string" use="optional"/>
 						<xs:attribute name="email" type="xs:string" use="optional"/>
