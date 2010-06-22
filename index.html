@@ -1,1 +1,219 @@
-My GitHub Page
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>ialt/elateXam @ GitHub</title>
+
+    <style type="text/css">
+    body {
+        margin-top: 1.0em;
+        font-family: "Lucida Grande", Verdana, Helvetica, Arial, FreeSans;
+        color: #000000;
+        font-size: 12px;
+    }
+    #container {
+        margin: 0 auto;
+        width: 800px;
+    }
+    h1 { font-size: 3.8em; color: #b3afbd; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #b3afbd; }
+    h3 { text-align: center; color: #b3afbd; }
+    a { color: #b3afbd; }
+    .description { font-weight: bold; margin-bottom: 30px; margin-top: 30px;}
+    .download { float: right; }
+    pre { background: #303030; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+    </style>
+
+</head>
+<body>
+    <a href="http://github.com/ialt/elateXam"><img style="position: absolute; top: 0; right: 0; border: 0;"
+        src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+<div id="container">
+
+<div class="download">
+<a href="http://github.com/ialt/elateXam/zipball/master">
+<img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+<a href="http://github.com/ialt/elateXam/tarball/master">
+    <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+</div>
+
+<h2>
+    <a href="http://github.com/ialt/elateXam">elateXam</a>
+    <span class="small">by <a href="http://github.com/ialt">ialt</a></span>
+</h2>
+
+<div class="description">
+    E-Assessment as practiced at the University of Leipzig, Germany.
+</div>
+
+<p>E-Assessment environment tailored for the <a href="http://ialt.de">IALT, Institute for Applied Linguistics and Translatology</a> 
+    at <a href="http://uni-leipzig.de">U of L</a>.
+</p>
+
+<h2>Installation</h2>
+<ul>
+    <li>First, clone our project.
+        <pre>
+$ cd projects/ialt/
+$ git clone git://github.com/ialt/elateXam</pre>
+    </li>
+        <li>
+            We need a servlet container, preferably <a href="http://tomcat.apache.org/">Apache Tomcat</a>.
+            We used version <a href="http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.26/">5.5.26</a>, and it runs fine.
+        </li>
+
+        <li>
+            Make sure that your Tomcat installation spots some non-default features, which we need:
+
+            <pre>
+$ cd $CATALINA_HOME/conf/
+
+$ # In context.xml replace the default &lt;Context&gt; with &lt;Context antiJARLocking=&quot;true&quot;&gt;
+$ # it should look similar to:
+
+$ head -19 $CATALINA_HOME/conf/context.xml | tail -2
+&lt;Context antiJARLocking=&quot;true&quot;&gt;
+
+$ # The Connector element in your $CATALINA_HOME/conf/server.xml 
+$ # should define some additional attributes:
+
+$ grep &#x27;&lt;Connector port=\&quot;8080\&quot;&#x27; -A 4 $CATALINA_HOME/conf/server.xml 
+&lt;Connector port=&quot;8080&quot; maxHttpHeaderSize=&quot;8192&quot;
+    maxThreads=&quot;150&quot; minSpareThreads=&quot;25&quot; maxSpareThreads=&quot;75&quot;
+    enableLookups=&quot;false&quot; redirectPort=&quot;8443&quot; acceptCount=&quot;100&quot;
+    connectionTimeout=&quot;20000&quot; disableUploadTimeout=&quot;true&quot;
+
+    emptySessionPath=&quot;true&quot; useBodyEncodingForURI=&quot;false&quot; URIEncoding=&quot;UTF-8&quot; /&gt;
+
+$ # Add the following two line to $CATALINA_HOME/bin/catalina.sh 
+$ # (or catalina.bat on Windows)
+
+export CATALINA_OPTS="-server -Xmx786m -XX:MaxPermSize=256m"
+export JAVA_OPTS='-Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false'
+</pre>
+            </li>
+            <li>Build and deploy your project. Basically this can be done via Maven with the help of a 
+                Maven Profile named <em>deployTomcat</em>.
+                Here's the dump of a script that can be used to build the three necessary parts -
+                examServer, taskmodel-api and taskmodel-core-view - in one go:
+
+                <pre>
+#!/usr/bin/env bash
+
+# Reinstall elateXam server and dependent projects
+# completely on a locally running tomcat.
+
+# ---------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------
+
+# Base directory of elateXam,
+# e.g. your git clone's root 
+BASE=$HOME/projects/ialt/elateXam
+
+# Tomcat base directory
+TOMCAT_HOME=$HOME/opt/apache-tomcat-5.5.26
+
+# ---------------------------------------------------------
+# Actions
+# ---------------------------------------------------------
+
+TASKMODEL_BASE=$BASE/taskmodel
+TASKMODEL_SCHEMA_BASE=$TASKMODEL_BASE/taskmodel-schema
+EXAMSERVER_BASE=$BASE/examServer
+
+PWD=`pwd`
+
+echo "Stopping Tomcat..."
+$TOMCAT_HOME/bin/shutdown.sh
+
+echo "Cleaning Tomcat..."
+rm -rf $TOMCAT_HOME/webapps/taskmodel-core-view.war
+rm -rf $TOMCAT_HOME/webapps/taskmodel-core-view
+rm -rf $TOMCAT_HOME/webapps/examServer.war
+rm -rf $TOMCAT_HOME/webapps/examServer
+
+rm -rf $TOMCAT_HOME/work/Catalina/localhost/examServer
+rm -rf $TOMCAT_HOME/work/Catalina/localhost/taskmodel-core-view
+rm -rf $TOMCAT_HOME/conf/Catalina/localhost/examServer*
+rm -rf $TOMCAT_HOME/conf/Catalina/localhost/taskmodel-core-view*
+
+echo "Rebuilding schema..."
+cd $TASKMODEL_SCHEMA_BASE
+mvn clean install
+
+echo "Deploying taskmodel-core-view..."
+cd $TASKMODEL_BASE
+mvn install -PdeployTomcat -Dtomcat.path=$TOMCAT_HOME
+
+echo "Deploying examServer..."
+cd $EXAMSERVER_BASE
+mvn install -PdeployTomcat -Dtomcat.path=$TOMCAT_HOME
+
+echo "Starting Tomcat at $TOMCAT_HOME..."
+CATALINA_OPTS="-Dfile.encoding=UTF-8" $TOMCAT_HOME/bin/startup.sh
+
+cd $PWD
+
+# OS X
+if [ "Darwin" == `uname -s` ]; then
+    echo "Opening .. http://localhost:8080/examServer"
+    sleep 3 && open "http://localhost:8080/examServer"
+fi
+                </pre></li>
+                <li>Navigate to <a href="http://localhost:8080/examServer">http://localhost:8080/examServer</a>
+                    and login with the default <strong>admin</strong> / <strong>admin</strong> credentials.
+                </li>
+            </ul>
+            
+            <h2>More Information</h2>
+            <p>More information on the project can be found on <a href="http://elateportal.de/">http://elateportal.de/</a></p>
+
+            <h2>Contact</h2>
+            <ul>
+                <li>ialt.leipzig / gmail.com</li>
+                <li>martin.czygan / gmail.com</li>  
+                <li>dienst / informatik.uni-leipzig.de</li>
+
+            </ul>
+
+
+            <h2>Download</h2>
+            <p>
+                You can download this project in either
+                <a href="http://github.com/ialt/elateXam/zipball/master">zip</a> or
+                <a href="http://github.com/ialt/elateXam/tarball/master">tar</a> formats.
+            </p>
+            <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+                by running:
+                <pre>$ git clone git://github.com/ialt/elateXam</pre>
+            </p>
+
+            <div class="footer">
+                get the source code on GitHub : <a href="http://github.com/ialt/elateXam">ialt/elateXam</a>
+            </div>
+
+        </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7190285-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>
