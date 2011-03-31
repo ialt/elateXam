@@ -27,7 +27,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
-import org.jfree.data.statistics.BoxAndWhiskerXYDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
 import de.laures.cewolf.DatasetProduceException;
@@ -58,8 +57,7 @@ public class BoxScoresDatasetProducer implements DatasetProducer {
       @Override
       public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
         CewolfChartFactory.check(data, BoxAndWhiskerCategoryDataset.class, "box");
-        // return ChartFactory.createBoxAndWhiskerChart(title, xAxisLabel, yAxisLabel, (BoxAndWhiskerCategoryDataset) data, true);
-        return ChartFactory.createBoxAndWhiskerChart(title, xAxisLabel, yAxisLabel, (BoxAndWhiskerXYDataset) data, true);
+        return ChartFactory.createBoxAndWhiskerChart(title, xAxisLabel, yAxisLabel, (BoxAndWhiskerCategoryDataset) data, true);
       }
     });
   }
