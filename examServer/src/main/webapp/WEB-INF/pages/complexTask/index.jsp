@@ -68,13 +68,22 @@ Korrekturstand des letzten Versuchs:
 <br>
 </fieldset>
 <br>
+	
+<script type="text/javascript">
+<!--
+function confirmAdvice() {
+	var answer = confirm("Hiermit bestätige ich, dass ich die nachstehenden allgemeinen Bedienungshinweise zur Kenntnis genommen habe.");
+	return answer;
+}
+//-->
+</script>
 
 <fieldset class="tasks"><legend>Start</legend>
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
   <tr>
     <td valign="top" width="50%">
 	<fieldset class="tasks"><legend>Neuer L&ouml;sungsversuch</legend>
-      <form method="get" action="/taskmodel-core-view/execute.do">
+      <form method="get" action="/taskmodel-core-view/execute.do" onsubmit="if (!confirmAdvice()) { return false; }">
 	<input type="submit" value="Starten"
 		<c:choose>
 			<c:when test="${!task.canStartNewTry}"> disabled="true"</c:when>
